@@ -1,8 +1,10 @@
 package Balancer
 
 import (
+	"encoding/json"
 	"github.com/Liberatys/Lithium/Service"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -16,17 +18,8 @@ var balacerRouter BalancerRouter
 
 func InitNewRouter() BalancerRouter {
 	newBalancerRouter := BalancerRouter{Router: mux.Router{}, Initiated: true}
-	newBalancerRouter.registerDefaultRoutes()
 	balacerRouter = newBalancerRouter
 	return newBalancerRouter
-}
-
-func (balancerRouter *BalancerRouter) AddRoute(routePath string, methodToRegister func(http.ResponseWriter, *http.Request)) {
-	balancerRouter.Router.HandleFunc(routePath, methodToRegister)
-}
-
-func (balancerRouter *BalancerRouter) registerDefaultRoutes() {
-	balancerRouter.Router.HandleFunc("/apigateway", APIGateWay)
 }
 
 func APIGateWay(rw http.ResponseWriter, request *http.Request) {
@@ -39,6 +32,14 @@ func APIGateWay(rw http.ResponseWriter, request *http.Request) {
 	} else {
 		http.Redirect(rw, request, "http://"+serviceInfomration+""+destinationURL, 301)
 	}
+}
+
+func DiscoverService(rw http.ResponseWriter, r *http.Request) {
+	var serviceToRegister Service.Service
+	body, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(body, &serviceToRegister)
+	balacerRouter.Services = append(balacerRouter.Services, serviceToRegister)
+	rw.Write([]byte("Registered Service: " + string(serviceToRegister.Name)))
 }
 
 func (balancerRouter *BalancerRouter) RetreaveServices() []Service.Service {

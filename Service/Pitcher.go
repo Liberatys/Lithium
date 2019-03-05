@@ -3,7 +3,7 @@ package Service
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -20,9 +20,7 @@ func (service *Service) PitchServer() {
 	if err != nil {
 	} else {
 		url := "http://" + service.HomePoint.HomeIP + ":" + service.HomePoint.HomePort + "" + service.HomePoint.HomeEndPoint
-		fmt.Println(url)
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(payLoad))
-		fmt.Println(bytes.NewBuffer(payLoad))
 		if err != nil {
 			log.Fatal(err.Error())
 			log.Fatal("Error at creating Request for discovery")
@@ -42,7 +40,13 @@ func (service *Service) PitchServer() {
 				if resp.StatusCode > 400 && resp.StatusCode < 511 {
 					log.Fatal("Was not able to call the server, shutting down the Service")
 				} else {
-					log.Println("Pitched Service to server, now looking for traffic")
+					body, err := ioutil.ReadAll(resp.Body)
+					if err != nil {
+						log.Fatal("Was not able to connect to the server")
+					} else {
+						bodySequence := string(body[:])
+						log.Println(bodySequence)
+					}
 				}
 			}
 		}

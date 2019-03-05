@@ -15,6 +15,9 @@ func (balancer *Balancer) SpinUpServer() {
 		IdleTimeout:  timeOutInSeconds,
 		Handler:      &CORSRouterDecorator{&balancer.Router.Router},
 	}
-	log.Println("Not listening on Port: " + balancer.Port)
-	server.ListenAndServe()
+	log.Println("Now listening on Port: " + balancer.Port)
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Fatal("Was not able to create the Balancer")
+	}
 }
