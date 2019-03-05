@@ -45,7 +45,9 @@ func (service *Service) PitchServer() {
 						log.Fatal("Was not able to connect to the server")
 					} else {
 						bodySequence := string(body[:])
-						log.Println(bodySequence)
+						if bodySequence == "Registered Service" {
+							log.Println("Service has been registered")
+						}
 					}
 				}
 			}
