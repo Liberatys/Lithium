@@ -6,8 +6,19 @@ import (
 )
 
 type ServiceRouter struct {
-	Router mux.Router
-	routes []string
+	Router  mux.Router
+	routes  []string
+	Blocked bool
+}
+
+func (serviceRouter *ServiceRouter) InitServiceRouter() {
+	serviceRouter.Router = mux.Router{}
+	serviceRouter.Blocked = true
+	serviceRouter.registerDefaultRoutes()
+}
+
+func (serviceRouter *ServiceRouter) OpenConnections() {
+	serviceRouter.Blocked = false
 }
 
 func (serviceRouter *ServiceRouter) registerRoute(path string, function func(http.ResponseWriter, *http.Request)) {
@@ -16,11 +27,7 @@ func (serviceRouter *ServiceRouter) registerRoute(path string, function func(htt
 }
 
 func (serviceRouter *ServiceRouter) registerDefaultRoutes() {
-	serviceRouter.registerRoute("/pong", Ping)
-}
-
-func Functionaly(rw http.ResponseWriter, req *http.Request) {
-
+	serviceRouter.registerRoute("/ping", Ping)
 }
 
 func (serviceRouter *ServiceRouter) getRoutes() []string {
