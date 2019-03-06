@@ -31,6 +31,8 @@ type Service struct {
 	Router      ServiceRouter
 	HomePoint   HomePoint
 	ErrorCount  int
+	Token       string
+	Flagged     bool
 }
 
 type HomePoint struct {

@@ -11,6 +11,7 @@ type Balancer struct {
 	Port              string
 }
 
+//CreateNewBalancer is setting the needed variables and is returning an instance for usage.
 func CreateNewBalancer(Port string) Balancer {
 	newBalancer := Balancer{CreationTimeStamp: time.Now().Unix(), Port: Port}
 	newBalancer.initBalancer()

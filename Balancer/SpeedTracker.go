@@ -21,7 +21,10 @@ type ServiceMiddleWare struct {
 
 func (serviceMiddleWare *ServiceMiddleWare) removeConnectionFromPool() {
 	if serviceMiddleWare.CurrentConnections > 0 {
-		serviceMiddleWare.CurrentConnections--
+		//waiting 200mil-seconds
+		//this is a prediction of how long it will take, at the slowest to process a request and send away the return.
+		time.Sleep(500 * time.Millisecond)
+		serviceMiddleWare.CurrentConnections -= 1
 	}
 }
 
@@ -56,7 +59,7 @@ func (serviceMiddleWare *ServiceMiddleWare) startSpeedTest() {
 	if serviceMiddleWare.SpeedTestFails > 0 {
 		if serviceMiddleWare.ReconnectionTries >= 2 {
 			log.Println("Overwritten Service: " + serviceMiddleWare.Service.Name + " because we were not able to reach it")
-			serviceMiddleWare.Service = Service.Service{}
+			serviceMiddleWare.Service.Flagged = true
 		} else {
 			log.Println("SpeedTestFails for: " + serviceMiddleWare.Service.Name + ": " + strconv.Itoa(serviceMiddleWare.SpeedTestFails))
 			serviceMiddleWare.ReconnectionTries++

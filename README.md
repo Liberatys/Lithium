@@ -72,7 +72,7 @@ If a service is not responding, it gets flagged and is no longer receaving traff
       
 ### Additional Information about Lithium
 
-<b>Current-Version: v0.0.0.1<br>
+<b>Current-Version: v0.1.0.0<br>
 Latest-Update: 06.03.2019
 </b>
 
@@ -84,3 +84,13 @@ Latest-Update: 06.03.2019
 * MiddleWare for Logging
 * Settings loaded from a settings file      
         
+        
+        
+        
+#### Version-System
+So to keep track of things threw the version system, I created a system that would fit my needs.
+The v in the version stands for : Version;
+The first Part of the version is the release-versions.
+The second displays rewrites and big changes.
+The third is adressing bug-fixes.
+The fourth and last is adressing the new features and maintenance.       

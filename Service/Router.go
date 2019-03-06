@@ -34,6 +34,6 @@ func (serviceRouter *ServiceRouter) getRoutes() []string {
 	return serviceRouter.routes
 }
 
-func Ping(rw http.ResponseWriter, req *http.Request) {
+func Ping(rw http.ResponseWriter, _ *http.Request) {
 	rw.Write([]byte("Pong"))
 }

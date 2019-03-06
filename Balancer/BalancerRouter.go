@@ -5,7 +5,6 @@ import (
 	"github.com/Liberatys/Lithium/Service"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -69,27 +68,33 @@ func DiscoverService(rw http.ResponseWriter, r *http.Request) {
 	it is looking for the fastest service of the given ones.
 	If a service is found, it will return the IP+""+Port
 	Else it will return "None Found"
+
+
+	Service speed is termined by the last response-Time * the current Connections.
+	1 second after we redirected the service, we will decrement the current Connection counter.
+	This is a prediction and is just a temporary system.
 */
+
 func (balancerRouter *BalancerRouter) findServicePointForType(serviceType string) string {
 	var fastestService ServiceMiddleWare
-	var fastestWheightedSpeed float64
+	var fastestWeightedSpeed float64
 	for _, element := range balancerRouter.Services {
 		if strings.Compare(strings.Trim(element.Service.Type, " "), strings.Trim(serviceType, " ")) == 0 {
 			if fastestService.Flagged == false {
 				fastestService = element
-				fastestWheightedSpeed = calculateWeightedSpeed(element)
+				fastestWeightedSpeed = calculateWeightedSpeed(element)
 			} else {
 				elementValue := calculateWeightedSpeed(element)
-				if elementValue < fastestWheightedSpeed {
-					fastestWheightedSpeed = elementValue
+				if elementValue < fastestWeightedSpeed && element.Service.Flagged == false {
+					fastestWeightedSpeed = elementValue
 					fastestService = element
 				}
 			}
 		}
 	}
 	if fastestService.Flagged != false {
-		fastestService.CurrentConnections++
-		log.Println(fastestService.CurrentConnections)
+		fastestService.CurrentConnections += 1
+		go fastestService.removeConnectionFromPool()
 		return fastestService.Service.IP + ":" + fastestService.Service.Port
 	}
 	return "None Found"

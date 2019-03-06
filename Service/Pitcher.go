@@ -22,7 +22,7 @@ func (service *Service) PitchServer() {
 		url := "http://" + service.HomePoint.HomeIP + ":" + service.HomePoint.HomePort + "" + service.HomePoint.HomeEndPoint
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(payLoad))
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Println(err.Error())
 			log.Fatal("Error at creating Request for discovery")
 		}
 		req.Header.Set("Content-Type", "application/json")
