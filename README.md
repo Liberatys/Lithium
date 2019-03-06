@@ -72,13 +72,15 @@ If a service is not responding, it gets flagged and is no longer receaving traff
       
 ### Additional Information about Lithium
 
-Current-Version: v0.0.0.1
+<b>Current-Version: v0.0.0.1<br>
 Latest-Update: 06.03.2019
-
+</b>
 
 #### Next Steps
 
 * Implementation of a distributed Database-System
+    * Native Service for Cassandra and MYSQL
+        * Logging for database-migration. 
 * MiddleWare for Logging
 * Settings loaded from a settings file      
         
