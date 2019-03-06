@@ -56,6 +56,10 @@ func (service *Service) Initialize(HomeIP string, HomePort string, HomeEndPoint 
 	service.setupServiceState("mysql")
 }
 
+func (service *Service) AddRoute(endPointPath string, function func(http.ResponseWriter, *http.Request)) {
+	service.Router.registerRoute(endPointPath, function)
+}
+
 func (service *Service) setupServiceState(DatabaseType string) {
 	service.Status = State.ServiceState{}
 	service.Status.InitServiceState(DatabaseType)
