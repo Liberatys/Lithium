@@ -1,7 +1,6 @@
 # Lithium
 
 
-
 ### Repository for the little microservice helper
 
 Welcome to my little library I'm currently developing in order to have an easier time
@@ -35,7 +34,6 @@ Your new Service, will now connect to the specified Load-Balancer IP, and will r
 <br>
 <br>
 
-
 #### Balancer/Service-Registry
 
 
@@ -66,8 +64,6 @@ The only thing you have to do now, is to send a url and the service-type that sh
 The balancer will, based on the last service-speed-test chose the service with the best stats and will redirect the API, to this service.
 
 If a service is not responding, it gets flagged and is no longer receaving traffic.
-
-      
       
       
 ### Additional Information about Lithium
@@ -88,9 +84,9 @@ Latest-Update: 06.03.2019
         
         
 #### Version-System
-So to keep track of things threw the version system, I created a system that would fit my needs.
-The v in the version stands for : Version;
-The first Part of the version is the release-versions.
-The second displays rewrites and big changes.
-The third is adressing bug-fixes.
-The fourth and last is adressing the new features and maintenance.       
+So to keep track of things threw the version system, I created a system that would fit my needs.</br>
+The v in the version stands for : Version;</br>
+The first Part of the version is the release-versions.</br>
+The second displays rewrites and big changes.</br>
+The third is addressing bug-fixes.</br>
+The fourth and last is adressing the new features and maintenance.</br>       

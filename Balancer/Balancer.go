@@ -12,15 +12,15 @@ type Balancer struct {
 }
 
 //CreateNewBalancer is setting the needed variables and is returning an instance for usage.
-func CreateNewBalancer(Port string) Balancer {
+func CreateNewBalancer(Port string, useLithiumLogger bool) Balancer {
 	newBalancer := Balancer{CreationTimeStamp: time.Now().Unix(), Port: Port}
-	newBalancer.initBalancer()
+	newBalancer.initBalancer(useLithiumLogger)
 	newBalancer.registerDefaultRoutes()
 	return newBalancer
 }
 
-func (balancer *Balancer) initBalancer() {
-	balancer.Router = InitNewRouter()
+func (balancer *Balancer) initBalancer(useLitiumLogger bool) {
+	balancer.Router = InitNewRouter(useLitiumLogger)
 }
 
 func (balancer *Balancer) AddRoute(routePath string, methodToRegister func(http.ResponseWriter, *http.Request)) {
@@ -30,4 +30,7 @@ func (balancer *Balancer) AddRoute(routePath string, methodToRegister func(http.
 func (balancer *Balancer) registerDefaultRoutes() {
 	balancer.AddRoute("/apigateway", APIGateWay)
 	balancer.AddRoute("/serviceDiscovery", DiscoverService)
+	if balacerRouter.UsingLithiumLogger == true {
+		balancer.AddRoute("/lithium/Logger", LogServiceAction)
+	}
 }

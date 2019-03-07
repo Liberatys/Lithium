@@ -14,15 +14,16 @@ import (
 */
 
 type BalancerRouter struct {
-	Router    mux.Router
-	Services  []ServiceMiddleWare
-	Initiated bool
+	Router             mux.Router
+	Services           []ServiceMiddleWare
+	Initiated          bool
+	UsingLithiumLogger bool
 }
 
 var balacerRouter BalancerRouter
 
-func InitNewRouter() BalancerRouter {
-	newBalancerRouter := BalancerRouter{Router: mux.Router{}, Initiated: true}
+func InitNewRouter(useLithiumLogger bool) BalancerRouter {
+	newBalancerRouter := BalancerRouter{Router: mux.Router{}, Initiated: true, UsingLithiumLogger: useLithiumLogger}
 	balacerRouter = newBalancerRouter
 	return newBalancerRouter
 }
@@ -33,7 +34,6 @@ type Destination struct {
 }
 
 func APIGateWay(rw http.ResponseWriter, request *http.Request) {
-	request.ParseForm()
 	/*
 		Parse the sent information that is used to redirect the user.
 	 */
@@ -53,6 +53,14 @@ func APIGateWay(rw http.ResponseWriter, request *http.Request) {
 	}
 }
 
+func createCopyOfReqeustBody(data []byte) []byte {
+	newBodyData := make([]byte, len(data))
+	for index, _ := range data {
+		newBodyData[index] = data[index]
+	}
+	return newBodyData
+}
+
 func DiscoverService(rw http.ResponseWriter, r *http.Request) {
 	var serviceToRegister Service.Service
 	body, _ := ioutil.ReadAll(r.Body)
@@ -69,12 +77,12 @@ func DiscoverService(rw http.ResponseWriter, r *http.Request) {
 	If a service is found, it will return the IP+""+Port
 	Else it will return "None Found"
 
-
 	Service speed is termined by the last response-Time * the current Connections.
 	1 second after we redirected the service, we will decrement the current Connection counter.
 	This is a prediction and is just a temporary system.
 */
 
+//TODO rewrite into a map that stores service by tag name
 func (balancerRouter *BalancerRouter) findServicePointForType(serviceType string) string {
 	var fastestService ServiceMiddleWare
 	var fastestWeightedSpeed float64
