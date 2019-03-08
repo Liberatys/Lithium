@@ -2,7 +2,6 @@ package Balancer
 
 import (
 	"fmt"
-	"github.com/Liberatys/Lithium/Service"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,16 +9,7 @@ import (
 	"time"
 )
 
-type ServiceMiddleWare struct {
-	Service            Service.Service
-	ResponseSpeed      float64
-	SpeedTestFails     int
-	Flagged            bool
-	ReconnectionTries  int
-	CurrentConnections int
-}
-
-func (serviceMiddleWare *ServiceMiddleWare) removeConnectionFromPool() {
+func (serviceMiddleWare *ServiceRegister) removeConnectionFromPool() {
 	if serviceMiddleWare.CurrentConnections > 0 {
 		//waiting 200mil-seconds
 		//this is a prediction of how long it will take, at the slowest to process a request and send away the return.
@@ -28,12 +18,12 @@ func (serviceMiddleWare *ServiceMiddleWare) removeConnectionFromPool() {
 	}
 }
 
-func (serviceMiddleWare *ServiceMiddleWare) startSpeedTest() {
+func (serviceRegister *ServiceRegister) startSpeedTest() {
 	startTime := time.Now()
-	url := "http://" + serviceMiddleWare.Service.IP + ":" + serviceMiddleWare.Service.Port + "/ping"
+	url := "http://" + serviceRegister.IP + ":" + serviceRegister.Port + "/ping"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		serviceMiddleWare.ResponseSpeed++
+		serviceRegister.ResponseSpeed++
 	} else {
 		timeout := time.Duration(1 * time.Second)
 		client := &http.Client{
@@ -41,29 +31,29 @@ func (serviceMiddleWare *ServiceMiddleWare) startSpeedTest() {
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			serviceMiddleWare.SpeedTestFails++
+			serviceRegister.SpeedTestFails++
 		} else {
 			defer resp.Body.Close()
 			_, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				serviceMiddleWare.SpeedTestFails++
+				serviceRegister.SpeedTestFails++
 			} else {
 				duration := time.Now().Sub(startTime)
-				serviceMiddleWare.ResponseSpeed = duration.Seconds()
-				log.Println("Service: " + serviceMiddleWare.Service.Name + " has a latency of: " + fmt.Sprintf("%f", serviceMiddleWare.ResponseSpeed*1000) + "ms")
-				serviceMiddleWare.SpeedTestFails = 0
-				serviceMiddleWare.ReconnectionTries = 0
+				serviceRegister.ResponseSpeed = duration.Seconds()
+				log.Println("Service: " + serviceRegister.Name + " has a latency of: " + fmt.Sprintf("%f", serviceRegister.ResponseSpeed*1000) + "ms")
+				serviceRegister.SpeedTestFails = 0
+				serviceRegister.ReconnectionTries = 0
 			}
 		}
 	}
-	if serviceMiddleWare.SpeedTestFails > 0 {
-		if serviceMiddleWare.ReconnectionTries >= 2 {
-			log.Println("Overwritten Service: " + serviceMiddleWare.Service.Name + " because we were not able to reach it")
-			serviceMiddleWare.Service.Flagged = true
+	if serviceRegister.SpeedTestFails > 0 {
+		if serviceRegister.ReconnectionTries >= 2 {
+			log.Println("Overwritten Service: " + serviceRegister.Name + " because we were not able to reach it")
+			serviceRegister.Flagged = true
 		} else {
-			log.Println("SpeedTestFails for: " + serviceMiddleWare.Service.Name + ": " + strconv.Itoa(serviceMiddleWare.SpeedTestFails))
-			serviceMiddleWare.ReconnectionTries++
-			serviceMiddleWare.startSpeedTest()
+			log.Println("SpeedTestFails for: " + serviceRegister.Name + ": " + strconv.Itoa(serviceRegister.SpeedTestFails))
+			serviceRegister.ReconnectionTries++
+			serviceRegister.startSpeedTest()
 		}
 	}
 }

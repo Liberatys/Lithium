@@ -2,20 +2,20 @@ package Balancer
 
 import (
 	"encoding/json"
-	"github.com/Liberatys/Lithium/Service"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 /**
 	The ServiceMiddleWare is recording the repsonseTime of the service and is also implementing a method for easy logging of the service.
 */
 
+var serviceMap = make(map[string][]ServiceRegister)
+
 type BalancerRouter struct {
 	Router             mux.Router
-	Services           []ServiceMiddleWare
+	Services           []ServiceRegister
 	Initiated          bool
 	UsingLithiumLogger bool
 }
@@ -26,6 +26,18 @@ func InitNewRouter(useLithiumLogger bool) BalancerRouter {
 	newBalancerRouter := BalancerRouter{Router: mux.Router{}, Initiated: true, UsingLithiumLogger: useLithiumLogger}
 	balacerRouter = newBalancerRouter
 	return newBalancerRouter
+}
+
+type ServiceRegister struct {
+	Name               string
+	IP                 string
+	Port               string
+	Type               string
+	Flagged            bool
+	ResponseSpeed      float64
+	CurrentConnections int
+	SpeedTestFails     int
+	ReconnectionTries  int
 }
 
 type Destination struct {
@@ -40,6 +52,7 @@ func APIGateWay(rw http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var destination Destination
 	err := decoder.Decode(&destination)
+
 	if err != nil {
 		rw.Write([]byte("Please provide destination and type"))
 	} else {
@@ -48,26 +61,22 @@ func APIGateWay(rw http.ResponseWriter, request *http.Request) {
 			rw.Write([]byte("No Service found for this service type"))
 		} else {
 			//sends the client to the service that is handling these types of requests.
-			http.Redirect(rw, request, "http://"+serviceInformation+""+destination.Destination, 301)
+			http.Redirect(rw, request, "http://"+serviceInformation+""+destination.Destination, 307)
 		}
 	}
 }
 
-func createCopyOfReqeustBody(data []byte) []byte {
-	newBodyData := make([]byte, len(data))
-	for index, _ := range data {
-		newBodyData[index] = data[index]
-	}
-	return newBodyData
-}
-
 func DiscoverService(rw http.ResponseWriter, r *http.Request) {
-	var serviceToRegister Service.Service
+	var serviceToRegister ServiceRegister
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &serviceToRegister)
-	newServiceMiddleWare := ServiceMiddleWare{Service: serviceToRegister, Flagged: true}
-	go newServiceMiddleWare.startSpeedTest()
-	balacerRouter.Services = append(balacerRouter.Services, newServiceMiddleWare)
+	go serviceToRegister.startSpeedTest()
+	if _, ok := serviceMap[serviceToRegister.Type]; ok {
+	} else {
+		serviceMap[serviceToRegister.Type] = []ServiceRegister{}
+	}
+	serviceMap[serviceToRegister.Type] = append(serviceMap[serviceToRegister.Type], serviceToRegister)
+	balacerRouter.Services = append(balacerRouter.Services, serviceToRegister)
 	rw.Write([]byte("Registered Service"))
 }
 
@@ -82,33 +91,36 @@ func DiscoverService(rw http.ResponseWriter, r *http.Request) {
 	This is a prediction and is just a temporary system.
 */
 
-//TODO rewrite into a map that stores service by tag name
 func (balancerRouter *BalancerRouter) findServicePointForType(serviceType string) string {
-	var fastestService ServiceMiddleWare
+	var fastestService ServiceRegister
+	fastestService.Flagged = true
 	var fastestWeightedSpeed float64
-	for _, element := range balancerRouter.Services {
-		if strings.Compare(strings.Trim(element.Service.Type, " "), strings.Trim(serviceType, " ")) == 0 {
-			if fastestService.Flagged == false {
-				fastestService = element
-				fastestWeightedSpeed = calculateWeightedSpeed(element)
-			} else {
-				elementValue := calculateWeightedSpeed(element)
-				if elementValue < fastestWeightedSpeed && element.Service.Flagged == false {
-					fastestWeightedSpeed = elementValue
+	if _, ok := serviceMap[serviceType]; ok {
+		for _, element := range serviceMap[serviceType] {
+			if element.Flagged == false {
+				if fastestService.Flagged == true {
 					fastestService = element
+				} else {
+					currentElementSpeed := calculateWeightedSpeed(element)
+					if currentElementSpeed < fastestWeightedSpeed {
+						fastestService = element
+						fastestWeightedSpeed = currentElementSpeed
+					}
 				}
 			}
 		}
+	} else {
+		return "None Found"
 	}
-	if fastestService.Flagged != false {
+	if fastestService.Flagged == false {
 		fastestService.CurrentConnections += 1
 		go fastestService.removeConnectionFromPool()
-		return fastestService.Service.IP + ":" + fastestService.Service.Port
+		return fastestService.IP + ":" + fastestService.Port
 	}
 	return "None Found"
 }
 
-func calculateWeightedSpeed(element ServiceMiddleWare) float64 {
+func calculateWeightedSpeed(element ServiceRegister) float64 {
 	elementValue := element.ResponseSpeed
 	if element.CurrentConnections > 0 {
 		elementValue *= float64(element.CurrentConnections)

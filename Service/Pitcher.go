@@ -3,6 +3,7 @@ package Service
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/Liberatys/Lithium/Balancer"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,7 +16,8 @@ import (
 */
 
 func (service *Service) PitchServer() {
-	payLoad, err := json.Marshal(service)
+	servicePayLoadStruct := Balancer.ServiceRegister{Name: service.Name, IP: service.IP, Port: service.Port, Flagged: false, Type: service.Type}
+	payLoad, err := json.Marshal(servicePayLoadStruct)
 	log.Println("Sending discovery to server")
 	if err != nil {
 	} else {
