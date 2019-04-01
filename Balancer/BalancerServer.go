@@ -7,8 +7,8 @@ import (
 )
 
 /**
-	The SpinUpServer is creating a local http-server for the balancer and is setting the router as the Handler.
-	This structure makes it possible, that we can plugin routes and handlers on a very high level.
+The SpinUpServer is creating a local http-server for the balancer and is setting the router as the Handler.
+This structure makes it possible, that we can plugin routes and handlers on a very high level.
 */
 func (balancer *Balancer) SpinUpServer() {
 	timeOutInSeconds := time.Second * 1

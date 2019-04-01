@@ -8,7 +8,7 @@ import (
 )
 
 /**
-	The ServiceMiddleWare is recording the repsonseTime of the service and is also implementing a method for easy logging of the service.
+The ServiceMiddleWare is recording the repsonseTime of the service and is also implementing a method for easy logging of the service.
 */
 
 var serviceMap = make(map[string][]ServiceRegister)
@@ -48,7 +48,7 @@ type Destination struct {
 func APIGateWay(rw http.ResponseWriter, request *http.Request) {
 	/*
 		Parse the sent information that is used to redirect the user.
-	 */
+	*/
 	decoder := json.NewDecoder(request.Body)
 	var destination Destination
 	err := decoder.Decode(&destination)
