@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type ServiceInterface interface {
+type SeriviceFace interface {
 	GetName() string
 	GetType() string
 	GetDescription() string

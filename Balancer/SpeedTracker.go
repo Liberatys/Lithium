@@ -18,12 +18,12 @@ func (serviceMiddleWare *ServiceRegister) removeConnectionFromPool() {
 	}
 }
 
-func (serviceRegister *ServiceRegister) startSpeedTest() {
+func (serviceMiddleWare *ServiceRegister) startSpeedTest() {
 	startTime := time.Now()
-	url := "http://" + serviceRegister.IP + ":" + serviceRegister.Port + "/ping"
+	url := "http://" + serviceMiddleWare.IP + ":" + serviceMiddleWare.Port + "/ping"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		serviceRegister.ResponseSpeed++
+		serviceMiddleWare.ResponseSpeed++
 	} else {
 		timeout := time.Duration(1 * time.Second)
 		client := &http.Client{
@@ -31,29 +31,29 @@ func (serviceRegister *ServiceRegister) startSpeedTest() {
 		}
 		resp, err := client.Do(req)
 		if err != nil {
-			serviceRegister.SpeedTestFails++
+			serviceMiddleWare.SpeedTestFails++
 		} else {
 			defer resp.Body.Close()
 			_, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				serviceRegister.SpeedTestFails++
+				serviceMiddleWare.SpeedTestFails++
 			} else {
 				duration := time.Now().Sub(startTime)
-				serviceRegister.ResponseSpeed = duration.Seconds()
-				log.Println("Service: " + serviceRegister.Name + " has a latency of: " + fmt.Sprintf("%f", serviceRegister.ResponseSpeed*1000) + "ms")
-				serviceRegister.SpeedTestFails = 0
-				serviceRegister.ReconnectionTries = 0
+				serviceMiddleWare.ResponseSpeed = duration.Seconds()
+				log.Println("Service: " + serviceMiddleWare.Name + " has a latency of: " + fmt.Sprintf("%f", serviceMiddleWare.ResponseSpeed*1000) + "ms")
+				serviceMiddleWare.SpeedTestFails = 0
+				serviceMiddleWare.ReconnectionTries = 0
 			}
 		}
 	}
-	if serviceRegister.SpeedTestFails > 0 {
-		if serviceRegister.ReconnectionTries >= 2 {
-			log.Println("Overwritten Service: " + serviceRegister.Name + " because we were not able to reach it")
-			serviceRegister.Flagged = true
+	if serviceMiddleWare.SpeedTestFails > 0 {
+		if serviceMiddleWare.ReconnectionTries >= 2 {
+			log.Println("Overwritten Service: " + serviceMiddleWare.Name + " because we were not able to reach it")
+			serviceMiddleWare.Flagged = true
 		} else {
-			log.Println("SpeedTestFails for: " + serviceRegister.Name + ": " + strconv.Itoa(serviceRegister.SpeedTestFails))
-			serviceRegister.ReconnectionTries++
-			serviceRegister.startSpeedTest()
+			log.Println("SpeedTestFails for: " + serviceMiddleWare.Name + ": " + strconv.Itoa(serviceMiddleWare.SpeedTestFails))
+			serviceMiddleWare.ReconnectionTries++
+			serviceMiddleWare.startSpeedTest()
 		}
 	}
 }

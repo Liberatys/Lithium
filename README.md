@@ -1,6 +1,5 @@
 # Lithium
 
-
 ### Repository for the little microservice helper
 
 Welcome to my little library I'm currently developing in order to have an easier time
@@ -68,7 +67,7 @@ If a service is not responding, it gets flagged and is no longer receaving traff
       
 ### Additional Information about Lithium
 
-<b>Current-Version: v0.1.0.0<br>
+<b>Current-Version: v0.1.0.2<br>
 Latest-Update: 06.03.2019
 </b>
 
