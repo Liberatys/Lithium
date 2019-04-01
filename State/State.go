@@ -16,14 +16,6 @@ func (serviceState *ServiceState) InitServiceState(DatabaseType string) {
 	serviceState.CreationTimeStamp = time.Now().Unix()
 }
 
-func (serviceState *ServiceState) SetDatabaseConnection() {
-	if serviceState.DatabaseType == "mysql" {
-
-	} else {
-
-	}
-}
-
 func (serviceState *ServiceState) CheckStatus() string {
 	serviceState.Status = "Working Fine"
 	err := serviceState.DatabaseConnection.Ping()

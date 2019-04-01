@@ -37,7 +37,7 @@ type Service struct {
 
 type HomePoint struct {
 	HomeIP       string
-	HomePort     string
+	HomePort     []string
 	HomeEndPoint string
 }
 
@@ -51,7 +51,7 @@ func NewService(Name string, Type string, Description string, Port string, Pitch
 	Creates the other systems that are needed for the service to run.
 	Afther that, it opens the connections, and calls to the server.
 */
-func (service *Service) Initialize(HomeIP string, HomePort string, HomeEndPoint string) {
+func (service *Service) Initialize(HomeIP string, HomePort []string, HomeEndPoint string) {
 	log.Println("Service " + service.Name + " created and initialized")
 	service.HomePoint = HomePoint{HomeIP: HomeIP, HomePort: HomePort, HomeEndPoint: HomeEndPoint}
 	service.setupServiceRouter()
