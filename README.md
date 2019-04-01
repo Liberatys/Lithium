@@ -51,8 +51,8 @@ You set the port that the local http-server should run on, after that you spin u
 Every balancer implements two endpoints that serve for service-discover and apigateway
 
     balancer.AddRoute("/apigateway", APIGateWay)
-    balancer.AddRoute("/serviceDiscovery", DiscoverService)  
-    
+    balancer.AddRoute("/serviceDiscovery", DiscoverService) 
+        
     
 The DisocverService is handling the registration of new services that connect to the server via the implemented Pitcher.
 The APIGateWay is running the distribution of the traffic to the services that can handle the load.
