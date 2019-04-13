@@ -1,8 +1,8 @@
 # Lithium
 
-
+<p align="center">
 <img src="./Design/LithiunLogo.png" alt="Lithium Logo">
-
+</p>
 
 <br>
 <br>
