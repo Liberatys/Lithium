@@ -1,7 +1,7 @@
 # Lithium
 
 
-<center><img src="./Design/LithiunLogo.png" alt="Lithium Logo"></center>
+<img src="./Design/LithiunLogo.png" alt="Lithium Logo">
 
 
 <br>
@@ -30,4 +30,3 @@ As a easy to use tool, we want to include all the batteries that you could need 
 * DDOS Protection
 * Secure Connection between Services
 * Databaseconnections (probably MYSQL, Cockroach and/or Cassandra)
-
