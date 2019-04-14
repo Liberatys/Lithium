@@ -16,7 +16,7 @@ type HTTPServer struct {
 //TODO: Create method of removing routes
 
 func InitializeBaiscHTTTPServer(Port string) HTTPServer {
-	httpServer := HTTPServer{Router: mux.NewRouter().StrictSlash(true),Port:Port}
+	httpServer := HTTPServer{Router: mux.NewRouter().StrictSlash(true), Port: Port}
 	//setting a low repsonse time for server and client, should solve the problem of DDOS with blocking like slow loris.
 	timeOut := time.Second * 1
 	server := &http.Server{
@@ -24,7 +24,8 @@ func InitializeBaiscHTTTPServer(Port string) HTTPServer {
 		ReadTimeout:  timeOut,
 		WriteTimeout: timeOut,
 		IdleTimeout:  timeOut,
-		Handler:      &CORSRouterDecorator{httpServer.Router},
+		//warp all requests into CORS, in order to allow set information to be passed.
+		Handler: &CORSRouterDecorator{httpServer.Router},
 	}
 	httpServer.HTTPServer = server
 	return httpServer

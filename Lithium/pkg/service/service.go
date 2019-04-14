@@ -2,7 +2,9 @@ package service
 
 import (
 	"fmt"
+	"github.com/Liberatys/Lithium/Lithium/pkg/database"
 	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
+	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
 	"strconv"
@@ -15,10 +17,12 @@ type Service struct {
 	Logger                 logger.Logger
 	IdentificationSequence string
 	HTTPServer             server.HTTPServer
+	DatabaseConnection     database.Connection
+	DiscoveryRecord        networking.Discovery
 }
 
 func CreateBasicService(Name string, Location string, Port string) Service {
-	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port)}
+	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}}
 	return service
 }
 
