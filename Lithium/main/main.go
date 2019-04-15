@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
-	serivce := service.CreateBasicService("Message-Service", "192.168.1.1", "443", "Message")
-	serivce.AddHTTTPRoute("/ping", Read)
-	serivce.SpinUpHTTPServer()
+	service := service.CreateBasicService("Message-Service", "192.168.1.1", "443", "Message")
+	service.AddHTTTPRoute("/ping", Read)
+	service.SpinUpHTTPServer()
 }
 
 func Read(w http.ResponseWriter, req *http.Request) {

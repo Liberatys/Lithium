@@ -1,12 +1,10 @@
 package service
 
 import (
-	"fmt"
 	"github.com/Liberatys/Lithium/Lithium/pkg/database"
 	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -48,10 +46,6 @@ func (service *Service) GetRouteListing() []string {
 }
 
 func (service *Service) SpinUpHTTPServer() {
-	state := service.HTTPServer.StartHTTPServer()
-	if state == false {
-		service.Logger.WriteLog(fmt.Sprintf("HTTP Server was not able to start on Port: %s\nEather the port is set, or you didn't define any routes for the server", service.HTTPServer.Port))
-	} else {
-		service.Logger.WriteLog(fmt.Sprintf("HTTP Server now running on Port: %s with %s routes set up", service.HTTPServer.Port, strconv.Itoa(len(service.HTTPServer.RouteLocationList))))
-	}
+	service.HTTPServer.StartHTTPServer()
+
 }

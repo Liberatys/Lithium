@@ -52,6 +52,7 @@ func (httpServer *HTTPServer) StartHTTPServer() bool {
 	}
 	err = httpServer.HTTPServer.ListenAndServeTLS("cert.pem", "key.pem")
 	if err != nil {
+		fmt.Println(fmt.Sprintf("Server failed to run"))
 		return false
 	}
 	return true
