@@ -1,55 +1,72 @@
+// roach wraps `lib/pq` providing the basic methods for
+// creating an entrypoint for our database.
 package database
 
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/pkg/errors"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
-var connection Connection
-
 type Connection struct {
-	DatabaseType       string
-	ConnectionSequence string
-	Connection         *sql.DB
+	Db  *sql.DB
+	cfg Config
 }
 
-func InitConnection(databaseType string, username string, password string, databaseName string, protocol string, port string, IP string) {
-	connectionSequence := fmt.Sprintf("%s:%s@%s(%s:%s)/%s", username, password, protocol, IP, port, databaseName)
-	connection := Connection{DatabaseType: databaseType, ConnectionSequence: connectionSequence}
-	createNewConnection(&connection)
+type Config struct {
+	Host              string
+	Port              string
+	User              string
+	Password          string
+	Database          string
+	ClientCertificate string
+	ClientKey         string
 }
 
-func createNewConnection(connection *Connection) *sql.DB {
-	var err error
-	connection.Connection, err = sql.Open(connection.DatabaseType, connection.ConnectionSequence)
+var currentConnection Connection
+
+func InitDatabase(cfg Config) {
+	connection, err := New(cfg)
 	if err != nil {
-		log.Fatal("Creation of Database connection failed")
-		return nil
-	} else {
-		return connection.Connection
+		log.Println(err.Error())
 	}
+	currentConnection = connection
 }
 
-func GetDatabaseConnection() *sql.DB {
-	if connection.Connection != nil && IsConnected() == true {
-		return connection.Connection
-	}
-	if connection.Connection == nil {
-		connection.Connection = createNewConnection(&connection)
-	}
-	return connection.Connection
+func GetDatabaseConnection() Connection {
+	return currentConnection
 }
 
-func IsConnected() bool {
-	err := connection.Connection.Ping()
+func New(cfg Config) (roach Connection, err error) {
+	roach.cfg = cfg
+	db, err := sql.Open("postgres", fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s sslcert=%s sslkey=%s",
+		cfg.User, cfg.Password, cfg.Database, cfg.Host, cfg.Port, cfg.ClientCertificate, cfg.ClientKey))
 	if err != nil {
-		return false
+		err = errors.Wrapf(err,
+			"Couldn't open connection to postgre database (%s)")
+		return
 	}
-	return true
+
+	if err = db.Ping(); err != nil {
+		err = errors.Wrapf(err,
+			"Couldn't ping postgre database (%s)")
+		return
+	}
+	roach.Db = db
+	return
 }
 
-func RetreaveConnectionInformation() Connection {
-	return connection
+func (r *Connection) Close() (err error) {
+	if r.Db == nil {
+		return
+	}
+	if err = r.Db.Close(); err != nil {
+		err = errors.Wrapf(err,
+			"Errored closing database connection")
+	}
+	return
 }
