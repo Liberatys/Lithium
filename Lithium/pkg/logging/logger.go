@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -17,7 +18,7 @@ func (consoleLogger ConsoleLogger) FormatLog(logMessage string) string {
 }
 
 func (consoleLogger ConsoleLogger) WriteLog(logMessage string) {
-	log.Println(logMessage)
+	fmt.Println(logMessage)
 }
 
 type FileLogger struct {

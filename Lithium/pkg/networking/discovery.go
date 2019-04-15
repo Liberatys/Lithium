@@ -66,7 +66,7 @@ func (discovery *Discovery) Register(service *service.Service) {
 }
 
 /**
-	Return the last response in the slice stored for Discovery
+Return the last response in the slice stored for Discovery
 */
 func (discovery *Discovery) LastResponse() DiscoveryResponse {
 	return discovery.DiscoveryResults[len(discovery.DiscoveryResults)-1]

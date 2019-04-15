@@ -1,9 +1,13 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
+	"fmt"
+	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/kabukky/httpscerts"
 )
 
 type HTTPServer struct {
@@ -38,7 +42,15 @@ func (httpServer *HTTPServer) StartHTTPServer() bool {
 	if len(httpServer.RouteLocationList) == 0 {
 		return false
 	}
-	err := httpServer.HTTPServer.ListenAndServe()
+	// Check if the cert files are available.
+	err := httpscerts.Check("cert.pem", "key.pem")
+	if err != nil {
+		err = httpscerts.Generate("cert.pem", "key.pem", fmt.Sprintf("127.0.0.1:%s", httpServer.Port))
+		if err != nil {
+			log.Fatal("Was not able to generate required keys")
+		}
+	}
+	err = httpServer.HTTPServer.ListenAndServeTLS("cert.pem", "key.pem")
 	if err != nil {
 		return false
 	}

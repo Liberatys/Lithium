@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Liberatys/Lithium/Lithium/pkg/database"
 	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
-	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
 	"strconv"
@@ -20,7 +19,6 @@ type Service struct {
 	IdentificationSequence string
 	HTTPServer             server.HTTPServer
 	DatabaseConnection     database.Connection
-	DiscoveryRecord        networking.Discovery
 	ActivationTimeStamp    int64
 }
 
