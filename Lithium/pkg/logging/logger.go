@@ -29,5 +29,5 @@ func (fileLogger *FileLogger) WriteLog(string) {
 }
 
 func (fileLogger *FileLogger) FormatLog(logMessage string) string {
-	return log.Prefix() + ""+ logMessage
+	return log.Prefix() + "" + logMessage
 }

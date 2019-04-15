@@ -8,10 +8,12 @@ import (
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type Service struct {
 	Name                   string
+	Type                   string
 	Location               string
 	Configuration          map[string]string
 	Logger                 logger.Logger
@@ -19,10 +21,11 @@ type Service struct {
 	HTTPServer             server.HTTPServer
 	DatabaseConnection     database.Connection
 	DiscoveryRecord        networking.Discovery
+	ActivationTimeStamp    int64
 }
 
-func CreateBasicService(Name string, Location string, Port string) Service {
-	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}}
+func CreateBasicService(Name string, Location string, Port string, Type string) Service {
+	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}, ActivationTimeStamp: time.Now().Unix(), Type: Type}
 	return service
 }
 
