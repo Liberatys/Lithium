@@ -2,3 +2,6 @@
 *.pem
 Context/*
 Lithium/main/configuration.txt
+Lithium/main/Dockerfile
+Lithium/main/BUILD.txt
+BUILD/
