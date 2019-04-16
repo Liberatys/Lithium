@@ -9,10 +9,14 @@ import (
 )
 
 type Service struct {
-	Name                   string
-	Type                   string
-	Location               string
-	Configuration          map[string]string
+	Name              string
+	Type              string
+	Description       string
+	Location          string
+	Configuration     map[string]string
+	ConfigurationPath string
+	//SecurityMode is a variable for the state of tls or standart http. 1 Is TLS and 0 is http.
+	SecurityMode           bool
 	Logger                 logger.Logger
 	IdentificationSequence string
 	HTTPServer             server.HTTPServer
@@ -21,8 +25,26 @@ type Service struct {
 }
 
 func CreateBasicService(Name string, Location string, Port string, Type string) Service {
-	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}, ActivationTimeStamp: time.Now().Unix(), Type: Type}
+	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}, ActivationTimeStamp: time.Now().Unix(), Type: Type, SecurityMode: false,
+		IdentificationSequence: "Not Identified",
+	}
 	return service
+}
+
+func (service *Service) SetSecurityModel(securityMode bool) {
+	service.SecurityMode = securityMode
+}
+
+func (service *Service) SetConfigurationLocation(configurationFilePath string) {
+	service.ConfigurationPath = configurationFilePath
+}
+
+func (service *Service) LoadConfigurations() {
+	configurationContent := ReadConfigurationFile(service.ConfigurationPath)
+	configurationMap := ParseGivenConfigurationFileContent(configurationContent, ":")
+	for key, value := range configurationMap {
+		service.Configuration[key] = value
+	}
 }
 
 func (service *Service) SetLogger(logger logger.Logger) {
@@ -46,6 +68,9 @@ func (service *Service) GetRouteListing() []string {
 }
 
 func (service *Service) SpinUpHTTPServer() {
-	service.HTTPServer.StartHTTPServer()
-
+	if service.SecurityMode == false {
+		service.HTTPServer.StartHTTPServer()
+	} else {
+		service.HTTPServer.StartHTTPTLSServer()
+	}
 }

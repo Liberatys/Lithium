@@ -14,7 +14,7 @@ type ConsoleLogger struct {
 }
 
 func (consoleLogger ConsoleLogger) FormatLog(logMessage string) string {
-	return logMessage
+	return log.Prefix() + "" + logMessage
 }
 
 func (consoleLogger ConsoleLogger) WriteLog(logMessage string) {

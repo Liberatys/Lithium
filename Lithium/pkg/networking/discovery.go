@@ -12,7 +12,6 @@ type DiscoveryRoutine interface {
 	Register() bool
 	LastResponse() DiscoveryResponse
 }
-
 type Discovery struct {
 	DiscoveryIP   string
 	DiscoveryPort string
@@ -44,8 +43,8 @@ func (discovery *Discovery) Register(service *service.Service) bool {
 		- Activation-Timestamp
 	*/
 	serviceConfiguration := make(map[string]string)
-	serviceConfiguration["type"] = service.Type
-	serviceConfiguration["name"] = service.Name
+	serviceConfiguration["type"] = service.Configuration["type"]
+	serviceConfiguration["name"] = service.Configuration["name"]
 	serviceConfiguration["ip"] = GetOutboundIP().String()
 	serviceConfiguration["port"] = service.HTTPServer.Port
 	serviceConfiguration["activation"] = strconv.FormatInt(service.ActivationTimeStamp, 10)

@@ -38,7 +38,7 @@ func (httpServer *HTTPServer) AddRoute(RouteLocation string, RouteFunction func(
 	httpServer.Router.HandleFunc(RouteLocation, RouteFunction)
 }
 
-func (httpServer *HTTPServer) StartHTTPServer() bool {
+func (httpServer *HTTPServer) StartHTTPTLSServer() bool {
 	if len(httpServer.RouteLocationList) == 0 {
 		return false
 	}
@@ -53,6 +53,17 @@ func (httpServer *HTTPServer) StartHTTPServer() bool {
 	err = httpServer.HTTPServer.ListenAndServeTLS("cert.pem", "key.pem")
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Server failed to run"))
+		return false
+	}
+	return true
+}
+
+func (httpServer *HTTPServer) StartHTTPServer() bool {
+	if len(httpServer.RouteLocationList) == 0 {
+		return false
+	}
+	err := httpServer.HTTPServer.ListenAndServe()
+	if err != nil {
 		return false
 	}
 	return true
