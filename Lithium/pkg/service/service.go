@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/Liberatys/Lithium/Lithium/pkg/database"
 	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
+	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
 	"time"
@@ -22,6 +23,7 @@ type Service struct {
 	HTTPServer             server.HTTPServer
 	DatabaseConnection     database.Connection
 	ActivationTimeStamp    int64
+	SecurityScan           networking.Scan
 }
 
 func CreateBasicService(Name string, Location string, Port string, Type string) Service {
@@ -73,4 +75,8 @@ func (service *Service) SpinUpHTTPServer() {
 	} else {
 		service.HTTPServer.StartHTTPTLSServer()
 	}
+}
+
+func (service *Service) RunPortScan(startPort int, endPort int) {
+	service.SecurityScan = networking.ScanPortRange("127.0.0.1", startPort, endPort, time.Second)
 }

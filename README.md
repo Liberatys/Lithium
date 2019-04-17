@@ -12,7 +12,7 @@ Welcome to the repository of Lithium. Lithium strives to be a easy and lightweig
 
 
 
-## What we want to achive
+## What we want to achieve
 
 As stated in the first part of the Page, we want to create an easy to use microservice tool that should help people to get up and running with microservices in golang. We want to give the developer the power to use features that we provide or just to overwrite them with his own tools.
 
@@ -29,7 +29,7 @@ As a easy to use tool, we want to include all the batteries that you could need 
 * Fitness Tracker (For the service not for the developer)
 * DDOS Protection
 * Secure Connection between Services
-* Databaseconnections (probably MYSQL, Cockroach and/or Cassandra)
+* Database connections (probably MYSQL, Cockroach and/or Cassandra)
 
 
 
@@ -43,3 +43,24 @@ The rightmost part stands for minor changes or just maintnance.
 The second rightmost stands for regular updates to the codebase, like refactoring or small rewrites.
 The second leftmost element represents bug fixes and rewrites and changes to the interface of the library.
 The leftmost signals information about big changes as well as certain publication steps such as production ready etc.
+
+
+
+## Usage
+
+
+At the moment Lithium allows you to use its first implementation of services threw the configuration of a configuration file.
+The needed endpoints are written in a normal go file by importing the Lithium Server package.
+They are bound to the internal http server of the service and are started if the http server spins up.
+
+You can set the security mode you want to have on your service by setting a variable in the service. If you choose the TLS mode, the service will generate the needed keys for the TLS connection. 
+By setting a different variable, you can let the service perform a port scan of the host maschine to secure the usage of the maschine.
+
+
+## Features
+
+* Usage of multiple databases
+* Dashboard for each service
+* Automatic packing into a docker container
+* Compilation to specified domain
+* Self destruction function to kill the service and the database on the maschine in order to protect its data.

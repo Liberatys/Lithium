@@ -1,5 +1,3 @@
-// roach wraps `lib/pq` providing the basic methods for
-// creating an entrypoint for our database.
 package database
 
 import (
