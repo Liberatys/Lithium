@@ -8,6 +8,7 @@ import (
 func main() {
 	service := service.CreateBasicService("Message-Service", "192.168.1.1", "443", "Message")
 	service.AddHTTTPRoute("/ping", Read)
+	service.SetSecurityModel(true)
 	service.SpinUpHTTPServer()
 }
 
