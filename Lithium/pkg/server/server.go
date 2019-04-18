@@ -50,6 +50,7 @@ func (httpServer *HTTPServer) StartHTTPTLSServer() bool {
 	if len(httpServer.RouteLocationList) == 0 {
 		return false
 	}
+	log.Println(fmt.Sprintf("Server running on Port: %s", httpServer.Port))
 	// Check if the cert files are available.
 	err := httpscerts.Check("cert.pem", "key.pem")
 	if err != nil {
@@ -71,6 +72,7 @@ func (httpServer *HTTPServer) StartHTTPServer() bool {
 	if len(httpServer.RouteLocationList) == 0 {
 		return false
 	}
+	log.Println(fmt.Sprintf("Server running on Port: %s", httpServer.Port))
 	err := httpServer.HTTPServer.ListenAndServe()
 	if err != nil {
 		return false

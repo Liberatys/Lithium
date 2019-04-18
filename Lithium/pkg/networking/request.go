@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -19,7 +20,6 @@ func SendPOSTRequest(requestLocation string, arguments map[string]string) (strin
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(string(codec[:]))
 	req, err := http.NewRequest("POST", requestLocation, strings.NewReader(string(codec[:])))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -28,7 +28,6 @@ func SendPOSTRequest(requestLocation string, arguments map[string]string) (strin
 	req.PostForm = payLoad
 	response, err := httpClient.Do(req)
 	if err != nil {
-		fmt.Println(err.Error())
 		return "Request failed | POST | Was not able to send request", false
 	}
 	defer response.Body.Close()
@@ -42,11 +41,13 @@ func SendPOSTRequest(requestLocation string, arguments map[string]string) (strin
 func SendGETRequest(requestLocation string) (string, bool) {
 	req, err := http.NewRequest("GET", requestLocation, nil)
 	if err != nil {
+		log.Println(err.Error())
 		return "Request failed | GET | Was not able to create the request", false
 	}
 	httpClient := http.Client{}
 	response, err := httpClient.Do(req)
 	if err != nil {
+		log.Println(err.Error())
 		return "Request failed | GET | Was not able to send the request", false
 	}
 	defer response.Body.Close()

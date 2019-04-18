@@ -6,13 +6,13 @@ import (
 )
 
 func main() {
-	service := service.CreateBasicService("Message-Service", "127.0.0.1:8001", "443", "Message")
+	service := service.CreateBasicService("Message-Service", "127.0.0.1:8001", "8002", "Message")
 	service.SetConfigurationLocation("configuration.txt")
 	service.LoadConfigurations()
 	service.InitDiscovery("127.0.0.1", "8001", 1)
 	service.RunDiscovery()
 	service.AddHTTTPRoute("/ping", Read)
-	service.SetSecurityModel(true)
+	service.SetSecurityModel(false)
 	service.SpinUpHTTPServer()
 }
 

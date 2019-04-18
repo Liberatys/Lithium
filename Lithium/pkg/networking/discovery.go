@@ -11,6 +11,7 @@ type DiscoveryRoutine interface {
 	Register() bool
 	LastResponse() DiscoveryResponse
 }
+
 type Discovery struct {
 	DiscoveryIP   string
 	DiscoveryPort string
@@ -47,6 +48,7 @@ func (discovery *Discovery) Register(configuration map[string]string, Timestamp 
 	serviceConfiguration["ip"] = GetOutboundIP().String()
 	serviceConfiguration["port"] = configuration["port"]
 	serviceConfiguration["activation"] = strconv.FormatInt(Timestamp, 10)
+	serviceConfiguration["protocol"] = configuration["protocol"]
 	routeListing := ""
 	for _, element := range RouteLocationList {
 		routeListing += element + ";"
