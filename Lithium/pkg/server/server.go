@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net/http"
 	"time"
@@ -15,10 +16,17 @@ type HTTPServer struct {
 	Router            *mux.Router
 	HTTPServer        *http.Server
 	Port              string
+	Certmanager       autocert.Manager
 }
 
 func InitializeBaiscHTTTPServer(Port string) HTTPServer {
 	httpServer := HTTPServer{Router: mux.NewRouter().StrictSlash(true), Port: Port}
+	certManager := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist("192.168.2.107"), //Your domain here
+		Cache:      autocert.DirCache("certs"),              //Folder for storing certificates
+	}
+	httpServer.Certmanager = certManager
 	//setting a low repsonse time for server and client, should solve the problem of DDOS with blocking like slow loris.
 	timeOut := time.Second * 1
 	server := &http.Server{
@@ -50,6 +58,7 @@ func (httpServer *HTTPServer) StartHTTPTLSServer() bool {
 			log.Fatal("Was not able to generate required keys")
 		}
 	}
+	go http.ListenAndServe(":http", httpServer.Certmanager.HTTPHandler(nil))
 	err = httpServer.HTTPServer.ListenAndServeTLS("cert.pem", "key.pem")
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Server failed to run"))

@@ -64,3 +64,4 @@ By setting a different variable, you can let the service perform a port scan of 
 * Automatic packing into a docker container
 * Compilation to specified domain
 * Self destruction function to kill the service and the database on the maschine in order to protect its data.
+* Health report on demand 

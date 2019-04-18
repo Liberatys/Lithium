@@ -1,6 +1,8 @@
 package networking
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,13 +15,20 @@ func SendPOSTRequest(requestLocation string, arguments map[string]string) (strin
 	for key, value := range arguments {
 		payLoad.Add(key, value)
 	}
-	req, err := http.NewRequest("POST", requestLocation, strings.NewReader(payLoad.Encode()))
+	codec, err := json.Marshal(arguments)
 	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(string(codec[:]))
+	req, err := http.NewRequest("POST", requestLocation, strings.NewReader(string(codec[:])))
+	if err != nil {
+		fmt.Println(err.Error())
 		return "Request failed | POST | Was not able to create the request", false
 	}
 	req.PostForm = payLoad
 	response, err := httpClient.Do(req)
 	if err != nil {
+		fmt.Println(err.Error())
 		return "Request failed | POST | Was not able to send request", false
 	}
 	defer response.Body.Close()

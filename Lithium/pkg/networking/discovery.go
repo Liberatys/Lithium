@@ -3,7 +3,6 @@ package networking
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Liberatys/Lithium/Lithium/pkg/service"
 	"strconv"
 )
 
@@ -32,7 +31,7 @@ type DiscoveryResponse struct {
 	Command        string
 }
 
-func (discovery *Discovery) Register(service *service.Service) bool {
+func (discovery *Discovery) Register(configuration map[string]string, Timestamp int64, RouteLocationList []string) bool {
 	/**
 	The required information for the balancer that is needed in order to perform the discovery is:
 		- Service-Type
@@ -43,19 +42,19 @@ func (discovery *Discovery) Register(service *service.Service) bool {
 		- Activation-Timestamp
 	*/
 	serviceConfiguration := make(map[string]string)
-	serviceConfiguration["type"] = service.Configuration["type"]
-	serviceConfiguration["name"] = service.Configuration["name"]
+	serviceConfiguration["type"] = configuration["type"]
+	serviceConfiguration["name"] = configuration["name"]
 	serviceConfiguration["ip"] = GetOutboundIP().String()
-	serviceConfiguration["port"] = service.HTTPServer.Port
-	serviceConfiguration["activation"] = strconv.FormatInt(service.ActivationTimeStamp, 10)
+	serviceConfiguration["port"] = configuration["port"]
+	serviceConfiguration["activation"] = strconv.FormatInt(Timestamp, 10)
 	routeListing := ""
-	for _, element := range service.HTTPServer.RouteLocationList {
+	for _, element := range RouteLocationList {
 		routeListing += element + ";"
 	}
 	serviceConfiguration["routes"] = routeListing
-	service.Configuration = serviceConfiguration
-	connectionSequence := fmt.Sprintf("%s:%s", discovery.DiscoveryIP, discovery.DiscoveryPort)
+	connectionSequence := fmt.Sprintf("http://%s:%s/register", discovery.DiscoveryIP, discovery.DiscoveryPort)
 	responseBody, error := SendPOSTRequest(connectionSequence, serviceConfiguration)
+	fmt.Println(responseBody)
 	if error == false {
 		return error
 	}
@@ -75,7 +74,6 @@ func (discovery *Discovery) Ping() bool {
 }
 
 /**
-
 Return the last response in the slice stored for Discovery
 */
 func (discovery *Discovery) LastResponse() DiscoveryResponse {
