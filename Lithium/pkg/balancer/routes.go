@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func Register(w http.ResponseWriter, req *http.Request) {
@@ -18,7 +19,7 @@ func Register(w http.ResponseWriter, req *http.Request) {
 	} else {
 		registeredService.RoutesList = strings.Split(registeredService.Routes, ";")
 		registeredService.Requests = 0
-		go registeredService.SpeedCheck()
+		go registeredService.SpeedCheck(time.Millisecond * 1000)
 		currentBalancer.Services[registeredService.Type] = append(currentBalancer.Services[registeredService.Type], registeredService)
 		log.Println(fmt.Sprintf("Registration of %s from %s", registeredService.Name, registeredService.IP))
 		w.Write([]byte("Registered Service"))
@@ -31,12 +32,13 @@ func Route(w http.ResponseWriter, req *http.Request) {
 	err := decoder.Decode(&routeRequest)
 	if err != nil {
 		w.Write([]byte("Invalid route-request"))
+		fmt.Println(err.Error())
 	} else {
 		routeRequest, success := currentBalancer.EvaulateServiceForRoute(routeRequest)
 		if success == false {
 			w.Write([]byte("No service found"))
 			return
 		}
-		http.Redirect(w, req, routeRequest.GetReRoute(), 307)
+		http.Redirect(w, req, "http://"+routeRequest.GetReRoute(), 307)
 	}
 }

@@ -19,8 +19,9 @@ type RegisteredService struct {
 	RequestDelay int64
 }
 
-func (registeredService *RegisteredService) SpeedCheck() {
-	log.Println("Speedchecking for Service")
+func (registeredService *RegisteredService) SpeedCheck(delay time.Duration) {
+	time.Sleep(delay)
+	log.Println("Speed checking for Service")
 	ip := registeredService.IP
 	if registeredService.IP == networking.GetOutboundIP().String() {
 		ip = "127.0.0.1"

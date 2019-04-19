@@ -23,6 +23,7 @@ func CreateNewBalancer(Port string, IP string) Balancer {
 
 func (balancer *Balancer) RegisterBasicRoutes() {
 	balancer.HTTPServer.AddRoute("/register", Register)
+	balancer.HTTPServer.AddRoute("/route", Route)
 }
 
 func (balancer *Balancer) SpinUpHTTP() {

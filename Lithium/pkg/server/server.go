@@ -21,12 +21,6 @@ type HTTPServer struct {
 
 func InitializeBaiscHTTTPServer(Port string) HTTPServer {
 	httpServer := HTTPServer{Router: mux.NewRouter().StrictSlash(true), Port: Port}
-	certManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("192.168.2.107"), //Your domain here
-		Cache:      autocert.DirCache("certs"),              //Folder for storing certificates
-	}
-	httpServer.Certmanager = certManager
 	//setting a low repsonse time for server and client, should solve the problem of DDOS with blocking like slow loris.
 	timeOut := time.Second * 1
 	server := &http.Server{

@@ -28,6 +28,7 @@ func SendPOSTRequest(requestLocation string, arguments map[string]string) (strin
 	req.PostForm = payLoad
 	response, err := httpClient.Do(req)
 	if err != nil {
+		fmt.Println(err.Error())
 		return "Request failed | POST | Was not able to send request", false
 	}
 	defer response.Body.Close()
