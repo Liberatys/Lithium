@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"github.com/Liberatys/Lithium/Lithium/pkg/configuration"
 	"github.com/Liberatys/Lithium/Lithium/pkg/database"
 	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
@@ -26,7 +27,7 @@ type Service struct {
 }
 
 func CreateBasicService(Name string, Location string, Port string, Type string) Service {
-	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.InitializeBaiscHTTTPServer(Port), Logger: logger.ConsoleLogger{}, ActivationTimeStamp: time.Now().Unix(), Type: Type,
+	service := Service{Name: Name, Location: Location, Configuration: make(map[string]string), HTTPServer: server.BasicHTTTPServer(Port), Logger: logger.StatisticsLogger{}, ActivationTimeStamp: time.Now().Unix(), Type: Type,
 		SecurityConfig: Security{},
 	}
 	return service
@@ -82,4 +83,8 @@ func (service *Service) SpinUpHTTPServer() {
 	} else {
 		service.HTTPServer.StartHTTPTLSServer()
 	}
+}
+
+func (service *Service) GetDatabaseConnection() *sql.DB {
+	return database.GetDatabaseConnection().Db
 }

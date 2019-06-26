@@ -54,7 +54,7 @@ func (discovery *Discovery) Register(configuration map[string]string, Timestamp 
 		routeListing += element + ";"
 	}
 	serviceConfiguration["routes"] = routeListing
-	connectionSequence := fmt.Sprintf("http://%s:%s/register", discovery.DiscoveryIP, discovery.DiscoveryPort)
+	connectionSequence := fmt.Sprintf("https://%s:%s/register", discovery.DiscoveryIP, discovery.DiscoveryPort)
 	responseBody, error := SendPOSTRequest(connectionSequence, serviceConfiguration)
 	fmt.Println(responseBody)
 	if error == false {

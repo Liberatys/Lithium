@@ -12,7 +12,7 @@ func main() {
 	service.InitDiscovery("127.0.0.1", "8001", 1)
 	service.AddHTTTPRoute("/ping", Read)
 	go service.RunDiscovery()
-	service.SetSecurityModel(false)
+	service.SetSecurityModel(true)
 	service.SpinUpHTTPServer()
 }
 

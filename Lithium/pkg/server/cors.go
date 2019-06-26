@@ -1,9 +1,8 @@
 package server
 
-
 import (
-"github.com/gorilla/mux"
-"net/http"
+	"github.com/gorilla/mux"
+	"net/http"
 )
 
 // CORSRouterDecorator applies CORS headers to a mux.Router

@@ -19,10 +19,11 @@ type HTTPServer struct {
 	Certmanager       autocert.Manager
 }
 
-func InitializeBaiscHTTTPServer(Port string) HTTPServer {
+func BasicHTTTPServer(Port string) HTTPServer {
 	httpServer := HTTPServer{Router: mux.NewRouter().StrictSlash(true), Port: Port}
 	//setting a low repsonse time for server and client, should solve the problem of DDOS with blocking like slow loris.
 	timeOut := time.Second * 1
+
 	server := &http.Server{
 		Addr:         ":" + Port,
 		ReadTimeout:  timeOut,

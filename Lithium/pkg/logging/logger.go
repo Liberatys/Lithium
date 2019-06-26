@@ -32,3 +32,14 @@ func (fileLogger *FileLogger) WriteLog(string) {
 func (fileLogger *FileLogger) FormatLog(logMessage string) string {
 	return log.Prefix() + "" + logMessage
 }
+
+type StatisticsLogger struct {
+	Request int
+}
+
+func (statisticsLogger StatisticsLogger) FormatLog(logMessage string) string {
+	return ""
+}
+func (statisticsLogger StatisticsLogger) WriteLog(logMessage string) {
+	return
+}

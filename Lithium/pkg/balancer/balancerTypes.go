@@ -6,11 +6,12 @@ import (
 )
 
 type RouteRequest struct {
-	Type       string `json:"type"`
-	Endpoint   string `json:"endpoint"`
-	Importance string `json:"importance"`
-	IP         string
-	Port       string
+	Type        string `json:"type"`
+	Endpoint    string `json:"endpoint"`
+	Importance  string `json:"importance"`
+	AccessToken string `json:"access"`
+	IP          string
+	Port        string
 }
 
 func (routeRequest *RouteRequest) GetReRoute() string {

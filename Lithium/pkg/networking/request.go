@@ -1,6 +1,7 @@
 package networking
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,7 +12,10 @@ import (
 )
 
 func SendPOSTRequest(requestLocation string, arguments map[string]string) (string, bool) {
-	httpClient := http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	httpClient := http.Client{Transport: tr}
 	payLoad := url.Values{}
 	for key, value := range arguments {
 		payLoad.Add(key, value)
@@ -45,7 +49,10 @@ func SendGETRequest(requestLocation string) (string, bool) {
 		log.Println(err.Error())
 		return "Request failed | GET | Was not able to create the request", false
 	}
-	httpClient := http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	httpClient := http.Client{Transport:tr}
 	response, err := httpClient.Do(req)
 	if err != nil {
 		log.Println(err.Error())
