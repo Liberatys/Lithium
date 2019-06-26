@@ -4,3 +4,4 @@ Context/*
 Lithium/main/configuration.txt
 Lithium/main/Dockerfile
 BUILD/
+*.DS_Store
