@@ -52,7 +52,7 @@ func SendGETRequest(requestLocation string) (string, bool) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	httpClient := http.Client{Transport:tr}
+	httpClient := http.Client{Transport: tr}
 	response, err := httpClient.Do(req)
 	if err != nil {
 		log.Println(err.Error())

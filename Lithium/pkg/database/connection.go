@@ -39,7 +39,6 @@ func GetDatabaseConnection() Connection {
 }
 
 func New(cfg Config) (Connection, error) {
-	//TODO: find easy way to enable ssl so we can remove ssl disable
 	db, err := sql.Open("postgres", fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%s sslmode=require",
 		cfg.User, cfg.Password, cfg.Database, cfg.Host, cfg.Port))
@@ -59,7 +58,7 @@ func (r *Connection) Close() (err error) {
 	}
 	if err = r.Db.Close(); err != nil {
 		err = errors.Wrapf(err,
-			"Errored closing database connection")
+			"Error accurred closing database connection")
 	}
 	return
 }
