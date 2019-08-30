@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
+
+	"github.com/shirou/gopsutil/cpu"
 )
 
 type DiscoveryRoutine interface {
@@ -42,11 +45,13 @@ func (discovery *Discovery) Register(configuration map[string]string, Timestamp 
 		- Route-List
 		- Activation-Timestamp
 	*/
+	percent, _ := cpu.Percent(time.Second, true)
 	serviceConfiguration := make(map[string]string)
 	serviceConfiguration["type"] = configuration["type"]
 	serviceConfiguration["name"] = configuration["name"]
 	serviceConfiguration["ip"] = GetOutboundIP().String()
 	serviceConfiguration["port"] = configuration["port"]
+	serviceConfiguration["load"] = fmt.Sprintf("%f", percent)
 	serviceConfiguration["activation"] = strconv.FormatInt(Timestamp, 10)
 	serviceConfiguration["protocol"] = configuration["protocol"]
 	routeListing := ""
@@ -64,8 +69,8 @@ func (discovery *Discovery) Register(configuration map[string]string, Timestamp 
 	Store response parsed as DiscoveryReponse for later use
 	*/
 	var discoveryResult DiscoveryResponse
-	json.Unmarshal([]byte(responseBody), discoveryResult)
 	discovery.DiscoveryResults = append(discovery.DiscoveryResults, discoveryResult)
+	json.Unmarshal([]byte(responseBody), discoveryResult)
 	return true
 }
 

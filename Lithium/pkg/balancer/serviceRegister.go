@@ -1,9 +1,10 @@
 package balancer
 
 import (
-	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
 	"log"
 	"time"
+
+	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
 )
 
 type RegisteredService struct {
@@ -11,6 +12,7 @@ type RegisteredService struct {
 	Name         string `json:"name"`
 	IP           string `json:"ip"`
 	Port         string `json:"port"`
+	Load         string `json:"load"`
 	Activation   string `json:"activation"`
 	Routes       string `json:"routes"`
 	Protocol     string `json:"protocol"`

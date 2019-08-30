@@ -31,8 +31,6 @@ As a easy to use tool, we want to include all the batteries that you could need 
 * Secure Connection between Services
 * Database connections (probably MYSQL, Cockroach and/or Cassandra)
 
-
-
 ## Versioning
 
 The versioniong and the tags in git follow a 4 step path so that the current step can be easily identified.
@@ -43,7 +41,6 @@ The rightmost part stands for minor changes or just maintnance.
 The second rightmost stands for regular updates to the codebase, like refactoring or small rewrites.
 The second leftmost element represents bug fixes and rewrites and changes to the interface of the library.
 The leftmost signals information about big changes as well as certain publication steps such as production ready etc.
-
 
 
 ## Usage

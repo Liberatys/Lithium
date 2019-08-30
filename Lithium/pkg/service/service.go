@@ -2,13 +2,14 @@ package service
 
 import (
 	"database/sql"
-	"github.com/Liberatys/Lithium/Lithium/pkg/configuration"
-	"github.com/Liberatys/Lithium/Lithium/pkg/database"
-	"github.com/Liberatys/Lithium/Lithium/pkg/logging"
-	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
-	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 	"net/http"
 	"time"
+
+	"github.com/Liberatys/Lithium/Lithium/pkg/configuration"
+	"github.com/Liberatys/Lithium/Lithium/pkg/database"
+	logger "github.com/Liberatys/Lithium/Lithium/pkg/logging"
+	"github.com/Liberatys/Lithium/Lithium/pkg/networking"
+	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 )
 
 type Service struct {

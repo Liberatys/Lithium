@@ -1,7 +1,6 @@
 package balancer
 
 import (
-	"github.com/Liberatys/Lithium/Lithium/pkg/configuration"
 	"github.com/Liberatys/Lithium/Lithium/pkg/server"
 )
 
@@ -10,8 +9,13 @@ type Balancer struct {
 	Port          string
 	AccessToken   string
 	IP            string
-	Services      map[string][]RegisteredService
-	HTTPServer    server.HTTPServer
+	// the cpu load for a service is checked and then stored in this structure
+	// without the cpu load, we can't have a good understand about the health of a service, because the latency that we store
+	// is not the only indicator for load or stress on a server, so by adding the cpu-load of a service as a field in this structure, we can better route
+	// the requests to the server it should go to.
+	Load       string
+	Services   map[string][]RegisteredService
+	HTTPServer server.HTTPServer
 }
 
 var currentBalancer Balancer
@@ -33,6 +37,7 @@ func (balancer *Balancer) SpinUpHTTP() {
 
 /// Load the configuration that is set for the balancer
 /// Should be used as a list like file.
+/*
 func (balancer *Balancer) LoadConfigurations(FileLocation string) {
 	configurationContent := configuration.ReadConfigurationFile(FileLocation)
 	configurationMap := configuration.ParseGivenConfigurationFileContent(configurationContent, ":")
@@ -43,7 +48,7 @@ func (balancer *Balancer) LoadConfigurations(FileLocation string) {
 		balancer.Configuration[key] = value
 	}
 }
-
+*/
 /// On a given request, check if a service can be found, that is matching the type of service
 /// In addition, we look for the service with the least load eg. the least latency.
 func (balancer *Balancer) EvaluateServiceForRoute(routeRequest RouteRequest) (RouteRequest, bool) {
