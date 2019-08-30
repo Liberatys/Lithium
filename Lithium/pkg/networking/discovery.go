@@ -45,6 +45,9 @@ func (discovery *Discovery) Register(configuration map[string]string, Timestamp 
 		- Route-List
 		- Activation-Timestamp
 	*/
+	// adding the reading of the current cpu usage in order to have a better reading on the health of the maschine.
+	// Using only the reading of the latency of a service, wouldn't detect long running processes and would therefore not be able to correctly relfect the health of a service.
+	// if needed one could also add a reading for the gpu on the maschine, but that would only apply to processes that are graphic heavy, so I will let it be for the momment.
 	percent, _ := cpu.Percent(time.Second, true)
 	serviceConfiguration := make(map[string]string)
 	serviceConfiguration["type"] = configuration["type"]
