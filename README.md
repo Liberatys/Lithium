@@ -8,7 +8,7 @@
 <br>
 <br>
 
-Welcome to the repository of Lithium. Lithium strives to be a easy and lightweigth tool for creating and maintaing microservices in a distributed fashion. We want to give you the opertunity to create your own implementations of certain tools that are used in the library and can be plugged into a service or a loader balancer.
+Welcome to the repository of Lithium. Lithium strives to be an easy and lightweigth tool for creating and maintaing microservices in a distributed fashion. We want to give you the opertunity to create your own implementations of certain tools that are used in the library and can be plugged into a service or a loader balancer.
 
 
 
@@ -18,7 +18,7 @@ As stated in the first part of the Page, we want to create an easy to use micros
 
 
 
-## Batteries included
+## Batteries included (Future)
 
 As a easy to use tool, we want to include all the batteries that you could need in order to create your system. So in the future we want to provide the following batteries:
 * Logwriter 
@@ -33,7 +33,7 @@ As a easy to use tool, we want to include all the batteries that you could need 
 
 ## Versioning
 
-The versioniong and the tags in git follow a 4 step path so that the current step can be easily identified.
+The Versioning and the tags in git follow a 4 step path so that the current step can be easily identified.
 
 Example: v0.0.0.1
 
@@ -54,7 +54,7 @@ You can set the security mode you want to have on your service by setting a vari
 By setting a different variable, you can let the service perform a port scan of the host maschine to secure the usage of the maschine.
 
 
-## Features
+## Future Features
 
 * Usage of multiple databases
 * Dashboard for each service
