@@ -8,7 +8,7 @@ type ServiceBalancer struct {
 	Configured bool
 }
 
-func newServiceBalancer(ip string, port string, region string) ServiceBalancer {
+func NewServiceBalancer(ip string, port string, region string) ServiceBalancer {
 	serviceBalancer := ServiceBalancer{
 		IP:         ip,
 		Port:       port,
