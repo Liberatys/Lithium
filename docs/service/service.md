@@ -12,5 +12,5 @@ A service needs the following elements to operate:
 * Balancer-Information (if a balancer is used)
 * Database-Information (if one is used)
 * Server-type ("Account-Management")
-* Short-Description ("What is the purpose of the service ? ")
+* Short-Description ("What is the purpose of the service ?")
 * RPC / HTTP -- Information

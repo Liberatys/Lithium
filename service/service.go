@@ -15,6 +15,7 @@ type Service struct {
 	Description        string `json:"description"`
 	IP                 string `json:"ip"`
 	Port               string `json:"port"`
+	DefaultRoutes      bool
 	Balancer           ServiceBalancer
 	HTTPServer         communication.HTTPConnection
 	DatabaseConnection database.DatabaseInformation
@@ -40,8 +41,13 @@ func NewService(name string, typ string, description string, port string) Servic
 		Port:               port,
 		HTTPServer:         communication.HTTPConnection{},
 		DatabaseConnection: database.DatabaseInformation{},
+		DefaultRoutes:      true,
 	}
 	return service
+}
+
+func (service *Service) DisableDefaultRoutes() {
+	service.DefaultRoutes = false
 }
 
 func (service *Service) SetDatabaseInformation(ip string, port string, databasetype string, username string, password string, databasename string) {
@@ -85,16 +91,39 @@ func (service *Service) GetDatabaseConnectionString() string {
 	return fmt.Sprintf("%v:%v@tcp(%v:%v)/%v", databaseInfo.Username, databaseInfo.Password, databaseInfo.IP, databaseInfo.Port, databaseInfo.DatabaseName)
 }
 
-func (service *Service) SetServiceBalancer(serviceBalancer ServiceBalancer) {
-	service.Balancer = serviceBalancer
+func (service *Service) SetServiceBalancer(ip, port string) {
+	service.Balancer = NewServiceBalancer(ip, port, "")
 }
 
-func (service *Service) Start() {
-	service.ActivateHTTPServer(service.Port)
+func (service *Service) Register() {
+	if service.Balancer.Configured == true {
+		err, message := service.Balancer.Connect(service)
+		if err != nil {
+			panic(message)
+		}
+	}
 }
 
-func (service *Service) ActivateHTTPServer(port string) {
+func (service *Service) DefaultStartUp() {
+	if service.DefaultRoutes == false {
+		panic("Default Routes must be enabled for DefaultStartup")
+	}
+	service.ActivateHTTPServer()
+	service.AddDefaultRoutes()
+	service.Register()
+	service.StartHTTPServer()
+}
+
+func (service *Service) AddDefaultRoutes() {
+	service.HTTPServer.AddRoute("/healthcheck", HealthCheck)
+	service.HTTPServer.AddRoute("/notification", Notification)
+}
+
+func (service *Service) ActivateHTTPServer() {
 	service.HTTPServer = communication.NewHTTPServer(service.IP, service.Port)
+	if service.DefaultRoutes == true {
+		service.AddDefaultRoutes()
+	}
 }
 
 func (service *Service) StartHTTPServer() {
