@@ -21,7 +21,14 @@ type Service struct {
 }
 
 func (service *Service) Serialize() string {
-	return communication.Serialize(service)
+	serviceSer := communication.SerializedService{
+		Name:        service.Name,
+		Type:        service.Type,
+		Description: service.Description,
+		IP:          service.IP,
+		Port:        service.Port,
+	}
+	return communication.Serialize(serviceSer)
 }
 
 func NewService(name string, typ string, description string, port string) Service {

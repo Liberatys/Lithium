@@ -24,8 +24,7 @@ func NewServiceBalancer(ip string, port string, region string) ServiceBalancer {
 }
 
 func (serviceBalancer *ServiceBalancer) Connect(service *Service) (error, string) {
-	serializedService := communication.Serialize(service)
-	post := communication.NewPostRequest(serviceBalancer.IP, serviceBalancer.Port, "", "/register", serializedService)
+	post := communication.NewPostRequest(serviceBalancer.IP, serviceBalancer.Port, "", "/register", service.Serialize())
 	return post.SendRequest()
 }
 

@@ -2,7 +2,6 @@ package communication
 
 import (
 	"encoding/json"
-	"github.com/Liberatys/Sanctuary/service"
 )
 
 type SerializedService struct {
@@ -13,15 +12,8 @@ type SerializedService struct {
 	Port        string `json:"port"`
 }
 
-func Serialize(service *service.Service) string {
-	serService := SerializedService{
-		Name:        service.Name,
-		Type:        service.Type,
-		Description: service.Description,
-		IP:          service.IP,
-		Port:        service.Port,
-	}
-	emp, _ := json.Marshal(serService)
+func Serialize(serializedService SerializedService) string {
+	emp, _ := json.Marshal(serializedService)
 	return string(emp)
 }
 

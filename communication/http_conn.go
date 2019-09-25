@@ -42,6 +42,7 @@ func (server *HTTPConnection) Start() {
 		IdleTimeout:  timeOutInSeconds,
 		Handler:      &CORSRouterDecorator{router},
 	}
+	fmt.Println(fmt.Sprintf("HTTP-Server spun up on port :%v", server.Port))
 	err := ser.ListenAndServe()
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Was not able to spin up http server on port: %v because: %v", server.Port, err.Error()))
