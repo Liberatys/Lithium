@@ -1,6 +1,7 @@
 package communication
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,6 +13,42 @@ type Request interface {
 	SetDestination(route string)
 	SetRetryCount(count int)
 	SendRequest() bool
+}
+
+type POST struct {
+	IP    string
+	Port  string
+	Url   string
+	Route string
+	Body  string
+}
+
+func NewPostRequest(ip, port, url, route, body string) POST {
+	req := POST{
+		IP:    ip,
+		Port:  port,
+		Url:   url,
+		Route: route,
+		Body:  body,
+	}
+	return req
+}
+
+func (post *POST) SendRequest() (error, string) {
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v:%v/%v", post.IP, post.Port, post.Route), bytes.NewBuffer([]byte(post.Body)))
+	if err != nil {
+		return err, err.Error()
+	}
+	req.Header.Set("X-Custom-Header", "sanctuary")
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err, err.Error()
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	return nil, string(body)
 }
 
 type GET struct {

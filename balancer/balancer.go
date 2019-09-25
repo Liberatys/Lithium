@@ -15,6 +15,7 @@ func NewBalancer(name string, port string) Balancer {
 		Port:       port,
 		HTTPServer: communication.NewHTTPServer("127.0.0.1", port),
 	}
+	setBalancer = &balancer
 	return balancer
 }
 
@@ -35,5 +36,9 @@ func (balancer *Balancer) AddBasicRoutes() {
 }
 
 func (balancer *Balancer) AddRoute() {
+
+}
+
+func (balancer *Balancer) AddService(service communication.SerializedService) {
 
 }
