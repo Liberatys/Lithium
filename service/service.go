@@ -10,14 +10,18 @@ import (
 
 //Service structure for the base implementation of a service that can be expanded with other "components"
 type Service struct {
-	Name               string
-	Type               string
-	Description        string
-	IP                 string
-	Port               string
+	Name               string `json:"name"`
+	Type               string `json:"type"`
+	Description        string `json:"description"`
+	IP                 string `json:"ip"`
+	Port               string `json:"port"`
 	Balancer           ServiceBalancer
 	HTTPServer         communication.HTTPConnection
 	DatabaseConnection database.DatabaseInformation
+}
+
+func (service *Service) Serialize() string {
+	return communication.Serialize(service)
 }
 
 func NewService(name string, typ string, description string, port string) Service {

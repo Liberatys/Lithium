@@ -18,6 +18,14 @@ func NewServiceBalancer(ip string, port string, region string) ServiceBalancer {
 	return serviceBalancer
 }
 
+func (serviceBalancer *ServiceBalancer) Connect() {
+
+}
+
+func (serviceBalancer *ServiceBalancer) HealthCheck() {
+
+}
+
 func (serviceBalancer *ServiceBalancer) AddSecureKey(key string) {
 	serviceBalancer.SecureKey = key
 }
