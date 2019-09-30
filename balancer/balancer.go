@@ -1,7 +1,6 @@
 package balancer
 
 import (
-	"fmt"
 	"github.com/Liberatys/Sanctuary/communication"
 	"net/http"
 )
@@ -31,6 +30,17 @@ func (balancer *Balancer) GetService(typ string) string {
 	}
 	return "No service with given type found"
 }
+func (balancer *Balancer) GetServices(typ string) []string {
+	var services []string
+	setServices := balancer.Services[typ]
+	if setServices == nil {
+		return nil
+	}
+	for _, value := range setServices {
+		services = append(services, communication.Serialize(value))
+	}
+	return services
+}
 
 func (balancer *Balancer) Setup() {
 	balancer.AddBasicRoutes()
@@ -49,6 +59,8 @@ func (balancer *Balancer) DecodeService(input string) communication.SerializedSe
 
 func (balancer *Balancer) AddBasicRoutes() {
 	balancer.HTTPServer.AddRoute("/register", Register)
+	balancer.HTTPServer.AddRoute("/service", GetService)
+	balancer.HTTPServer.AddRoute("/services", GetAllServices)
 }
 
 func (balancer *Balancer) AddRoute(route string, function func(w http.ResponseWriter, r *http.Request)) {
@@ -62,6 +74,5 @@ func (balancer *Balancer) AddService(service communication.SerializedService) {
 	}
 	array := balancer.Services[service.Type]
 	array = append(array, service)
-	fmt.Println(array)
 	balancer.Services[service.Type] = array
 }

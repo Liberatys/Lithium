@@ -20,7 +20,6 @@ func NewDatabaseInformation(ip string, port string, databasetype string, usernam
 		Username:    username,
 		Password:    password,
 	}
-
 	return information
 }
 
@@ -38,6 +37,6 @@ func (info *DatabaseInformation) Close() error {
 	return err
 }
 
-func (databaseInfo *DatabaseInformation) SetDatabaseName(name string) {
-	databaseInfo.DatabaseName = name
+func (info *DatabaseInformation) SetDatabaseName(name string) {
+	info.DatabaseName = name
 }
