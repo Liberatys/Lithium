@@ -12,7 +12,7 @@ type Request interface {
 	SetParameter(key string, value string)
 	SetDestination(route string)
 	SetRetryCount(count int)
-	SendRequest() bool
+	SendRequest() (error, string)
 }
 
 type POST struct {
@@ -98,7 +98,7 @@ func (g *GET) SetRetryCount(count int) {
 	g.RequestRepetition = count
 }
 
-func (g *GET) SendRequest() (bool, string) {
+func (g *GET) SendRequest() (error, string) {
 	url := ""
 	if g.Url != "" {
 		url = g.Url
@@ -115,16 +115,16 @@ func (g *GET) SendRequest() (bool, string) {
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return false, err.Error()
+		return err, err.Error()
 	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err.Error()
+		return err, err.Error()
 	}
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return false, err.Error()
+		return err, err.Error()
 	}
-	return true, string(b)
+	return nil, string(b)
 }

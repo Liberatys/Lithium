@@ -1,8 +1,9 @@
 package balancer
 
 import (
-	"github.com/Liberatys/Sanctuary/communication"
 	"net/http"
+
+	"github.com/Liberatys/Sanctuary/communication"
 )
 
 type Balancer struct {
@@ -30,6 +31,7 @@ func (balancer *Balancer) GetService(typ string) string {
 	}
 	return "No service with given type found"
 }
+
 func (balancer *Balancer) GetServices(typ string) []string {
 	var services []string
 	setServices := balancer.Services[typ]
