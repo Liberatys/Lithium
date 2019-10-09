@@ -128,3 +128,5 @@ func (g *GET) SendRequest() (error, string) {
 	}
 	return nil, string(b)
 }
+
+// TODO: Implement the POST struct and its methods

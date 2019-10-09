@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Liberatys/Sanctuary/communication"
 	"github.com/Liberatys/Sanctuary/database"
+	"github.com/Liberatys/Sanctuary/load"
 	"net/http"
 )
 
@@ -28,6 +29,7 @@ func (service *Service) Serialize() string {
 		Description: service.Description,
 		IP:          service.IP,
 		Port:        service.Port,
+		Load:        load.NewLoad(),
 	}
 	return communication.Serialize(serviceSer)
 }

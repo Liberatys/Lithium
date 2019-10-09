@@ -24,12 +24,26 @@ func NewBalancer(name string, port string) Balancer {
 	return balancer
 }
 
+/*
+*
+* Must be tested and should also be modifiable by the user of the framework, because different usage is in need of different filtering.
+* TODO: Implementation of an api for modifying this part of the code.
+*
+ */
 func (balancer *Balancer) GetService(typ string) string {
 	services := balancer.Services[typ]
-	if len(services) > 0 {
-		return communication.Serialize(services[0])
+	if len(services) <= 0 {
+		return "No service with given type found"
 	}
-	return "No service with given type found"
+	lowest_index := services[0].LoadIndex
+	opt_service := services[0]
+	for _, value := range services {
+		if value.LoadIndex < lowest_index {
+			lowest_index = value.LoadIndex
+			opt_service = value
+		}
+	}
+	return opt_service
 }
 
 func (balancer *Balancer) GetServices(typ string) []string {
@@ -59,6 +73,7 @@ func (balancer *Balancer) DecodeService(input string) communication.SerializedSe
 	return communication.Decode(input)
 }
 
+// TODO: have the default route summed into a component that then can be added to the balancer
 func (balancer *Balancer) AddBasicRoutes() {
 	balancer.HTTPServer.AddRoute("/register", Register)
 	balancer.HTTPServer.AddRoute("/service", GetService)

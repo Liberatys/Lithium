@@ -35,3 +35,5 @@ func GetAllServices(w http.ResponseWriter, r *http.Request) {
 	}
 	return
 }
+
+// TODO: Add a validation method for the default routes so they can only be triggered by requests with a valid "ID"

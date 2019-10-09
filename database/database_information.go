@@ -25,11 +25,11 @@ func NewDatabaseInformation(ip string, port string, databasetype string, usernam
 
 func (info *DatabaseInformation) Setup() string {
 	if info.DatabaseName == "" {
-		return "Please set the databasename first"
+		return "You first have to set the name of the database"
 	}
 	CreateDatabaseConnection(info)
 	info.DatabaseConnection = GetDatabaseConnection()
-	return "Databaseconnection established"
+	return "Database connection established"
 }
 
 func (info *DatabaseInformation) Close() error {
