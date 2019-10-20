@@ -43,6 +43,7 @@ func (balancer *Balancer) GetService(typ string) string {
 			opt_service = value
 		}
 	}
+	//TODO: fix this issue, wrong return type.... serialize it and return as string
 	return opt_service
 }
 

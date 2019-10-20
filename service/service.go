@@ -3,10 +3,11 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
+
 	"github.com/Liberatys/Sanctuary/communication"
 	"github.com/Liberatys/Sanctuary/database"
 	"github.com/Liberatys/Sanctuary/load"
-	"net/http"
 )
 
 //Service structure for the base implementation of a service that can be expanded with other "components"

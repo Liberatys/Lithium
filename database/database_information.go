@@ -2,6 +2,8 @@ package database
 
 import "database/sql"
 
+//TODO: imporve the way the connection to the database is handled
+
 type DatabaseInformation struct {
 	IP                 string
 	Port               string

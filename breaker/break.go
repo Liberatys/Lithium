@@ -6,6 +6,8 @@ import (
 	"github.com/Liberatys/Sanctuary/communication"
 )
 
+//TODO: implement a circuit breaker
+
 //RequestBreak, handles the backing off from a request by a given number of times it should try to execute the request and a delay time, gv
 func RequestBreak(request communication.Request, repeat int, delay int) (bool, string) {
 	max := repeat

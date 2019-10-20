@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+
 	"github.com/Liberatys/Sanctuary/communication"
 )
 
@@ -30,7 +31,12 @@ func (serviceBalancer *ServiceBalancer) Connect(service *Service) (error, string
 
 func (serviceBalancer *ServiceBalancer) HealthCheck() (bool, string) {
 	getRequest := communication.NewGetRequestOverUrl(fmt.Sprintf("%v:%v/%v", serviceBalancer.IP, serviceBalancer.Port, "health"))
-	return getRequest.SendRequest()
+	//replace with the breaker method to call the server
+	err, message := getRequest.SendRequest()
+	if err != nil {
+		return false, message
+	}
+	return true, message
 }
 
 func (serviceBalancer *ServiceBalancer) AddSecureKey(key string) {
