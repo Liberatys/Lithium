@@ -36,4 +36,18 @@ func GetAllServices(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// TODO: implement the relay system
+
+// relay a message to all servies in a network
+func RelayCommand(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// relay a message to a group of serviess
+func RelayCommandToRec(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//TODO: implement methods for service update
+
 // TODO: Add a validation method for the default routes so they can only be triggered by requests with a valid "ID"

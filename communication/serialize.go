@@ -2,6 +2,7 @@ package communication
 
 import (
 	"encoding/json"
+
 	"github.com/Liberatys/Sanctuary/load"
 )
 
@@ -24,8 +25,6 @@ func Decode(serializedService string) SerializedService {
 	bytes := []byte(serializedService)
 	var serializeService SerializedService
 	json.Unmarshal(bytes, &serializeService)
-	if serializedService.Load != nil {
-		serializedService.LoadIndex = ((serializedService.Load.Network) * 10) + (serializedService.Load.GPU)
-	}
+	serializeService.LoadIndex = ((serializeService.Load.Network) * 10) + (serializeService.Load.CPU)
 	return serializeService
 }
