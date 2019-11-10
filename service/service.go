@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -59,12 +60,24 @@ func (service *Service) SetDatabaseInformation(ip string, port string, databaset
 	service.DatabaseConnection.Setup()
 }
 
-func (service *Service) PrepareQuery(query string, parameters ...string) (*sql.Stmt, error) {
+func (service *Service) ExecutePerparedQuery(query string, parameters ...interface{}) (sql.Result, error) {
 	stmt, stmt_err := service.DatabaseConnection.DatabaseConnection.Prepare(query)
 	if stmt_err != nil {
 		return nil, stmt_err
 	}
-	return stmt, nil
+	return stmt.Exec(parameters...)
+}
+
+func (service *Service) SerializeQueryResult(statement sql.Result) string {
+	return ToJSON(statement)
+}
+
+func ToJSON(obj interface{}) string {
+	res, err := json.Marshal(obj)
+	if err != nil {
+		panic("error with json serialization " + err.Error())
+	}
+	return string(res)
 }
 
 func (service *Service) Shutdown() error {
