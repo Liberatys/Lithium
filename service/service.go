@@ -54,10 +54,14 @@ func (service *Service) DisableDefaultRoutes() {
 	service.DefaultRoutes = false
 }
 
-func (service *Service) SetDatabaseInformation(ip string, port string, databasetype string, username string, password string, databasename string) {
+func (service *Service) SetDatabaseInformation(ip string, port string, databasetype string, username string, password string, databasename string) string {
 	service.DatabaseConnection = database.NewDatabaseInformation(ip, port, databasetype, username, password)
 	service.DatabaseConnection.SetDatabaseName(databasename)
-	service.DatabaseConnection.Setup()
+	return service.DatabaseConnection.Setup()
+}
+
+func (service *Service) GetDatabaseConnection() *sql.DB {
+	return service.DatabaseConnection.DatabaseConnection
 }
 
 func (service *Service) ExecutePerparedQuery(query string, parameters ...interface{}) (sql.Result, error) {
