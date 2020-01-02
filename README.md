@@ -8,7 +8,7 @@ Easy setup of a new service and adding new routes to the service. Also handle th
 Currently the service as well as the balancer have a small interface that is already available as a http api. I'm currently working on a ui for the balancer that can then be used to manage the services
 and send notifications and commands over the wire.
 
-You may also use the service without a balancer. This will allow you to create a http api in a very sh\*\*ort time and have it deployed in a fast manner.
+You may also use the service without a balancer. This will allow you to create a http api in a very short time and have it deployed in a fast manner.
 
 ## How to setup
 
