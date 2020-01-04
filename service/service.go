@@ -20,7 +20,7 @@ type Service struct {
 	Port               string `json:"port"`
 	DefaultRoutes      bool
 	Balancer           ServiceBalancer
-	HTTPServer         communication.HTTPConnection
+	HTTPServer         communication.Connection
 	DatabaseConnection database.DatabaseInformation
 }
 
@@ -43,7 +43,7 @@ func NewService(name string, typ string, description string, port string) Servic
 		Description:        description,
 		Balancer:           ServiceBalancer{},
 		Port:               port,
-		HTTPServer:         communication.HTTPConnection{},
+		HTTPServer:         &communication.HTTPConnection{},
 		DatabaseConnection: database.DatabaseInformation{},
 		DefaultRoutes:      true,
 	}
@@ -146,12 +146,22 @@ func (service *Service) ActivateHTTPServer() {
 	}
 }
 
+func (service *Service) ActivateHTTPSServer(cert, key string) {
+	server := communication.NewHTTPSServer(service.IP, service.Port)
+	server.Cert = cert
+	server.Key = key
+	service.HTTPServer = server
+	if service.DefaultRoutes == true {
+		service.AddDefaultRoutes()
+	}
+}
+
 func (service *Service) StartHTTPServer() {
 	service.HTTPServer.Start()
 }
 
 func (service *Service) AddHTTPRoute(route string, fn func(w http.ResponseWriter, r *http.Request)) (bool, string) {
-	if service.HTTPServer.Activated {
+	if service.HTTPServer.GetState() {
 		service.HTTPServer.AddRoute(route, fn)
 		return true, fmt.Sprintf("Route %v added", route)
 	}
