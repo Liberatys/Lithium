@@ -1,14 +1,12 @@
 package communication
 
 import (
-	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 type HTTPSConnection struct {
@@ -47,10 +45,6 @@ func (server *HTTPSConnection) Start() {
 	for key, value := range server.Routes {
 		router.HandleFunc(key, value)
 	}
-	certManager := autocert.Manager{
-		Prompt: autocert.AcceptTOS,
-		Cache:  autocert.DirCache("certs"),
-	}
 	timeOutInSeconds := time.Second * 4
 	ser := &http.Server{
 		Addr:         ":" + server.Port,
@@ -58,12 +52,8 @@ func (server *HTTPSConnection) Start() {
 		WriteTimeout: timeOutInSeconds,
 		IdleTimeout:  timeOutInSeconds,
 		Handler:      &CORSRouterDecorator{router},
-		TLSConfig: &tls.Config{
-			GetCertificate: certManager.GetCertificate,
-		},
 	}
-	go http.ListenAndServe(":3400", certManager.GetCertificate(nil))
-	err := ser.ListenAndServeTLS("", "")
+	err := ser.ListenAndServeTLS(server.Cert, server.Key)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Was not able to spin up http server on port: %v because: %v", server.Port, err.Error()))
 	}
