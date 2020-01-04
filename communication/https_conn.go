@@ -62,7 +62,7 @@ func (server *HTTPSConnection) Start() {
 			GetCertificate: certManager.GetCertificate,
 		},
 	}
-	go ser.ListenAndServe(":3400", certManager.GetCertificate(nil))
+	go http.ListenAndServe(":3400", certManager.GetCertificate(nil))
 	err := ser.ListenAndServeTLS("", "")
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Was not able to spin up http server on port: %v because: %v", server.Port, err.Error()))
